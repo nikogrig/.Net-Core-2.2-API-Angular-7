@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebApp.Data;
-using WebApp.Data.Models;
-using WebApp.Services.Auth.Contracts;
-using WebApp.Services.Auth.Models;
+using Rubi.Data;
+using Rubi.Data.Models;
+using Rubi.Services.Auth.Contracts;
+using Rubi.Services.Auth.Models;
 
-namespace WebApp.Services.Auth.Implementations
+namespace Rubi.Services.Auth.Implementations
 {
     public class AuthService : IAuthService
     {

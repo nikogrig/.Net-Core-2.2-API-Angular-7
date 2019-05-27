@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebApp.Common.Mapping;
-using WebApp.Data.Models;
+using Rubi.Common;
+using Rubi.Data.Models;
 
-namespace WebApp.Services.Auth.Models
+namespace Rubi.Services.Auth.Models
 {
     public class UserServiceModel : IMapFrom<ApplicationUser>
     {
