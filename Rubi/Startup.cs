@@ -12,6 +12,9 @@ using Rubi.Infrastructure.ServiceExtension;
 using Rubi.Infrastructure.IdentityExtension;
 using AutoMapper;
 using Rubi.Infrastructure.DbExtension;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Rubi
 {
@@ -54,6 +57,27 @@ namespace Rubi
             // OR
             //services.AddAutoMapper(params Type[] assemblyTypesToSearch);
 
+            services
+                .AddAuthentication(option =>
+                {
+                    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.SaveToken = true;
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidAudience = Configuration["JwtIssuer"],
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["JwtKey"])),
+                    };
+                });
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -65,7 +89,7 @@ namespace Rubi
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseDatabaseMigration();
-            app.UseDatabaseMigrationWithIdentities();     
+            app.UseDatabaseMigrationWithIdentities();
 
             if (env.IsDevelopment())
             {

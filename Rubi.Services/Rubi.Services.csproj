@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Rubi.Common\Rubi.Common.csproj" />
     <ProjectReference Include="..\Rubi.Data\Rubi.Data.csproj" />
   </ItemGroup>
 

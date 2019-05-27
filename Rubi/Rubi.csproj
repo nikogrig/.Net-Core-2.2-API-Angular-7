@@ -15,6 +15,7 @@
 	<ItemGroup>
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
@@ -30,8 +31,6 @@
 
 	<ItemGroup>
 		<Folder Include="Dtos\" />
-		<Folder Include="src\svc\contracts\" />
-		<Folder Include="src\svc\Implementations\" />
 		<Folder Include="src\svc\models\" />
 		<Folder Include="src\test\" />
 	</ItemGroup>
