@@ -11,6 +11,7 @@ using Rubi.Data.Models;
 using Rubi.Infrastructure.ServiceExtension;
 using Rubi.Infrastructure.IdentityExtension;
 using AutoMapper;
+using Rubi.Infrastructure.DbExtension;
 
 namespace Rubi
 {
@@ -63,7 +64,7 @@ namespace Rubi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            //app.UseDatabaseMigration();
+            app.UseDatabaseMigration();
             app.UseDatabaseMigrationWithIdentities();     
 
             if (env.IsDevelopment())
