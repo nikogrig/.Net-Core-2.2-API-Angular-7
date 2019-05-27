@@ -75,6 +75,7 @@ namespace Rubi
                         ValidAudience = Configuration["JwtIssuer"],
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["JwtKey"])),
+                        //
                     };
                 });
 
