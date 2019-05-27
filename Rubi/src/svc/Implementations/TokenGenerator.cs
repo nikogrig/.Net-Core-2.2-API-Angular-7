@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Rubi.Data.Models;
 using Rubi.src.svc.contracts;
+using Rubi.src.svc.models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -24,7 +25,7 @@ namespace Rubi.src.svc.Implementations
 
         }
 
-        public async Task<string> GenerateJwtTokenAsync(ApplicationUser user)
+        public async Task<TokenGenModel> GenerateJwtTokenAsync(ApplicationUser user)
         {
             var roles = await this.userManager.GetRolesAsync(user);
 
@@ -58,7 +59,13 @@ namespace Rubi.src.svc.Implementations
 
             var userToken = tokenHandler.WriteToken(tokenCreator);
 
-            return userToken;
+            var result = new TokenGenModel
+            {
+                Token = userToken,
+                Role = userRole    
+            };
+
+            return result;
         }
     }
 }

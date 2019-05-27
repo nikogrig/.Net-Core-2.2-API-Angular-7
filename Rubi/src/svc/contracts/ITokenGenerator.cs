@@ -1,4 +1,5 @@
 ﻿using Rubi.Data.Models;
+using Rubi.src.svc.models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Rubi.src.svc.contracts
 {
-    interface ITokenGenerator
+    public interface ITokenGenerator
     {
-        Task<string> GenerateJwtTokenAsync(ApplicationUser user);
+        Task<TokenGenModel> GenerateJwtTokenAsync(ApplicationUser user);
     }
 }

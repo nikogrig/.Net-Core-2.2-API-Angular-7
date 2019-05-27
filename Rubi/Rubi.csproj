@@ -31,7 +31,6 @@
 
 	<ItemGroup>
 		<Folder Include="Dtos\" />
-		<Folder Include="src\svc\models\" />
 		<Folder Include="src\test\" />
 	</ItemGroup>
 
