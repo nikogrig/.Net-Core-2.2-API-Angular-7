@@ -78,7 +78,7 @@ namespace Rubi
                     };
                 });
 
-            // In production, the Angular files will be served from this directory
+            // In production, the Angular files will be served from this directory  ss
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "src/client/dist";
