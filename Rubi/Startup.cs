@@ -11,6 +11,7 @@ using Rubi.Data.Models;
 using Rubi.Infrastructure.ServiceExtension;
 using Rubi.Infrastructure.IdentityExtension;
 using AutoMapper;
+using FluentValidation.AspNetCore;
 using Rubi.Infrastructure.DbExtension;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -51,6 +52,9 @@ namespace Rubi
                .BuildServiceProvider();
 
             services.AddDomainServices();
+
+            services.AddMvc()
+                    .AddFluentValidation();
 
             services.AddAutoMapper(typeof(Startup));
             //services.AddAutoMapper(Type assemblyTypeToSearch);
