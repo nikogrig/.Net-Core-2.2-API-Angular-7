@@ -30,9 +30,5 @@ namespace Rubi.Data.Models
 
         [Required]
         public string Address { get; set; }
-
-        //public string AppRoleID { get; set; }
-
-        //public AppRole AppRole { get; set; }
     }
 }

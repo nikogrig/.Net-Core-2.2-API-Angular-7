@@ -36,20 +36,35 @@ namespace Rubi
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            services.AddEntityFrameworkNpgsql()
+                    .AddDbContext<ApplicationDbContext>()
+                    .BuildServiceProvider();
+
+            //services.AddIdentityCore<ApplicationUser, IdentityRole>(options =>
+            //{
+            //    options.Password.RequireDigit = false;
+            //    options.Password.RequiredLength = 6;
+            //    options.Password.RequireLowercase = false;
+            //    options.Password.RequireNonAlphanumeric = false;
+            //    options.Password.RequireUppercase = false;
+            //})
+            //.AddEntityFrameworkStores<ApplicationDbContext>()
+            //.AddDefaultTokenProviders();
+
+            services.AddIdentityCore<ApplicationUser>(options => 
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 6;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
-            })
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
 
-            services.AddEntityFrameworkNpgsql()
-               .AddDbContext<ApplicationDbContext>()
-               .BuildServiceProvider();
+            });
+            new IdentityBuilder(typeof(ApplicationUser), typeof(IdentityRole), services)
+                .AddRoleManager<RoleManager<IdentityRole>>()
+                .AddSignInManager<SignInManager<ApplicationUser>>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddDomainServices();
 
@@ -58,7 +73,6 @@ namespace Rubi
 
             services.AddAutoMapper(typeof(Startup));
             //services.AddAutoMapper(Type assemblyTypeToSearch);
-            // OR
             //services.AddAutoMapper(params Type[] assemblyTypesToSearch);
 
             services

@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Rubi.Data.Models;
 using Rubi.Dtos;
 using Rubi.Services.Admin.Contracts;
+using Rubi.src.svc.contracts;
+using Rubi.Validators;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using static Rubi.Constants.IdentitiesConstants;
 
@@ -20,12 +20,14 @@ namespace Rubi.Controllers
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IAdminService adminService;
+        private readonly IEmailChecker emailCheckerService;
 
-        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IAdminService adminService)
+        public AdminController(IEmailChecker emailCheckerService, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IAdminService adminService)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
             this.adminService = adminService;
+            this.emailCheckerService = emailCheckerService;
         }
 
         // /get-roles
@@ -44,10 +46,28 @@ namespace Rubi.Controllers
         }
 
         // /create-user
+        // added fluentValidator
         [Route("create-user")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateUserByAdminDto model)
         {
+            if (!ModelState.IsValid)
+            {
+                return Unauthorized();
+            }
+
+            var validator = new CreateUserByAdminValidator(this.emailCheckerService);
+
+            var validatorResult = validator.Validate(model);
+
+            if (!validatorResult.IsValid)
+            {
+                foreach (var failure in validatorResult.Errors)
+                {
+                    Console.WriteLine("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
+                }
+            }
+
             var user = new ApplicationUser
             {
                 UserName = model.Username,
@@ -77,7 +97,17 @@ namespace Rubi.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(string id)
         {
+            if (String.IsNullOrEmpty(id))
+            {
+                return StatusCode(500, "ID cannot be null or empty");
+            }
+
             var user = await this.userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return StatusCode(403, "User cannot be null");
+            }
 
             var success = await this.userManager.DeleteAsync(user);
 
@@ -86,7 +116,7 @@ namespace Rubi.Controllers
                 return Ok();
             }
 
-            return Unauthorized();
+            return StatusCode(500, $"Cannot delete User. Something went wrong");
         }
 
         // /edit-user/{id}

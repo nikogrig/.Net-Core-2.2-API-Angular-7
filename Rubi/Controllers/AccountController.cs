@@ -6,6 +6,7 @@ using Rubi.Data.Models;
 using Rubi.Dtos;
 using Rubi.Services.Auth.Contracts;
 using Rubi.src.svc.contracts;
+using Rubi.Validators;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,8 +24,9 @@ namespace Rubi.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IConfiguration configuration;
         private readonly ITokenGenerator tokenGenerator;
+        private readonly IEmailChecker emailCheckerService;
 
-        public AccountController(ITokenGenerator tokenGenerator, RoleManager<IdentityRole> roleManager, IAuthService authService, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
+        public AccountController(IEmailChecker emailCheckerService, ITokenGenerator tokenGenerator, RoleManager<IdentityRole> roleManager, IAuthService authService, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
         {
             this.tokenGenerator = tokenGenerator;
             this.roleManager = roleManager;
@@ -32,13 +34,32 @@ namespace Rubi.Controllers
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
+            this.emailCheckerService = emailCheckerService;
         }
 
         // /register
+        // added fluent validation
         [Route("register")]
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterFormDto model)
         {
+            if (!ModelState.IsValid)
+            {
+                return Unauthorized();
+            }
+
+            var validator = new RegisterFormValidator(this.emailCheckerService);
+
+            var validatorResult = validator.Validate(model);
+
+            if (!validatorResult.IsValid)
+            {
+                foreach (var failure in validatorResult.Errors)
+                {
+                    Console.WriteLine("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
+                }
+            }
+
             var user = new ApplicationUser
             {
                 UserName = model.Username,
@@ -50,6 +71,11 @@ namespace Rubi.Controllers
                 PhoneNumber = model.PhoneNumber,
                 SecurityStamp = Guid.NewGuid().ToString()
             };
+
+            if (user == null)
+            {
+                return StatusCode(403, "User cannot be null");
+            }
 
             var result = await this.userManager.CreateAsync(user, model.Password);
 
@@ -70,6 +96,23 @@ namespace Rubi.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginFormDto model)
         {
+            if (!ModelState.IsValid)
+            {
+                return Unauthorized();
+            }
+
+            var validator = new LoginFormValidator();
+
+            var validatorResult = validator.Validate(model);
+
+            if (!validatorResult.IsValid)
+            {
+                foreach (var failure in validatorResult.Errors)
+                {
+                    Console.WriteLine("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
+                }
+            }
+
             var user = await this.userManager.FindByEmailAsync(model.Email);
 
             if (user != null && await this.userManager.CheckPasswordAsync(user, model.Password))
@@ -101,7 +144,7 @@ namespace Rubi.Controllers
 
             if (userToken == null)
             {
-                throw new ArgumentNullException("TODO JWT Generator token null exception description");
+                return StatusCode(500, "User cannot be null.");
             }
 
             var model = new JwtAuthDto
@@ -118,9 +161,21 @@ namespace Rubi.Controllers
                 Token = userToken.Token
             };
 
+            var validator = new JwtAuthValidator();
+
+            var validatorResult = validator.Validate(model);
+
+            if (!validatorResult.IsValid)
+            {
+                foreach (var failure in validatorResult.Errors)
+                {
+                    Console.WriteLine("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
+                }
+            }
+
             if (model == null)
             {
-                throw new ArgumentNullException("TODO JWT Generator model null exception description");
+                return StatusCode(500, "Model cannot be null.");
 
             }
 
