@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Rubi.Data.Configurations;
 using Rubi.Data.Models;
+using System;
 
 namespace Rubi.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -17,33 +18,23 @@ namespace Rubi.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.Entity<IdentityUser>().ToTable("Users").Property(p => p.Id).HasColumnName("UserId");
+            modelBuilder.Entity<ApplicationUser>().ToTable("Users");
 
-            modelBuilder.Entity<IdentityRole>().ToTable("Roles");
+            modelBuilder.Entity<ApplicationRole>().ToTable("Roles");
 
-            modelBuilder.Entity<IdentityUserRole<string>>(entity =>
+            modelBuilder.Entity<IdentityUserRole<Guid>>(entity =>
             {
                 entity.ToTable("UserRoles");
-                //entity.HasKey(key => new { key.UserId, key.RoleId });
+                entity.HasKey(key => new { key.UserId, key.RoleId });
             });
 
-            //modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserToken");
+            modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
 
-            //modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaim");
+            modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens"); 
 
-            //modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogin");
+            modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins");
 
-            //modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaim");
-
-            modelBuilder.Ignore<IdentityUserToken<string>>();
-
-            modelBuilder.Ignore<IdentityUserClaim<string>>();
-
-            modelBuilder.Ignore<IdentityUserLogin<string>>();
-
-            modelBuilder.Ignore<IdentityRoleClaim<string>>();
-
-            modelBuilder.ApplyConfiguration(new ApplicationUserConfig());
+            modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
         }
     }
 }

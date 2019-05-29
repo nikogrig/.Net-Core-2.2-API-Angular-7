@@ -53,20 +53,20 @@ namespace Rubi.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return Unauthorized();
+                return BadRequest(ModelState);
             }
 
-            var validator = new CreateUserByAdminValidator(this.emailCheckerService);
-
-            var validatorResult = validator.Validate(model);
-
-            if (!validatorResult.IsValid)
-            {
-                foreach (var failure in validatorResult.Errors)
-                {
-                    Console.WriteLine("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
-                }
-            }
+            //var validator = new CreateUserByAdminValidator(this.emailCheckerService);
+            //
+            //var validatorResult = validator.Validate(model);
+            //
+            //if (!validatorResult.IsValid)
+            //{
+            //    foreach (var failure in validatorResult.Errors)
+            //    {
+            //        Console.WriteLine("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
+            //    }
+            //}
 
             var user = new ApplicationUser
             {
@@ -122,9 +122,9 @@ namespace Rubi.Controllers
         // /edit-user/{id}
         [Route("edit-user/{id}")]
         [HttpPatch]
-        public async Task<IActionResult> EditUser(string id, [FromBody]EditUserDto user)
+        public async Task<IActionResult> EditUser(Guid id, [FromBody]EditUserDto user)
         {
-            if (user == null || string.IsNullOrEmpty(id))
+            if (user == null) //|| string.IsNullOrEmpty(id))
             {
                 return Unauthorized();
             }
@@ -142,7 +142,7 @@ namespace Rubi.Controllers
         // /user-detail/{id}
         [Route("user-detail/{id}")]
         [HttpGet]
-        public async Task<IActionResult> GetUserDetail(string id)
+        public async Task<IActionResult> GetUserDetail(Guid id)
         {
             var model = await this.adminService.GetUserDetailByIdAsync(id);
 

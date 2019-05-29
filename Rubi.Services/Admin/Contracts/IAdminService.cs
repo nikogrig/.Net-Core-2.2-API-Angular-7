@@ -11,8 +11,8 @@ namespace Rubi.Services.Admin.Contracts
     {
         Task<IEnumerable<UsersListingServiceModel>> GetAllUsersAsync();
 
-        Task<UsersListingServiceModel> GetUserDetailByIdAsync(string id);
+        Task<UsersListingServiceModel> GetUserDetailByIdAsync(Guid id);
 
-        Task<EditUserServiceModel> UpdateUserDataByIdAsync(string id, string username, string firstName, string lastName, string phoneNumber, string address, DateTime birthdate);
+        Task<EditUserServiceModel> UpdateUserDataByIdAsync(Guid id, string username, string firstName, string lastName, string phoneNumber, string address, DateTime birthdate);
     }
 }

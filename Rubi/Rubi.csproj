@@ -7,7 +7,7 @@
 		<IsPackable>false</IsPackable>
 		<SpaRoot>src\client\</SpaRoot>
 		<DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
-	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<!-- Set this to true if you enable server-side prerendering -->
 		<BuildServerSideRenderer>false</BuildServerSideRenderer>
 	</PropertyGroup>
@@ -21,6 +21,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>

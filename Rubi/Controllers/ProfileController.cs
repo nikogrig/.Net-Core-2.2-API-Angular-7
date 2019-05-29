@@ -33,7 +33,7 @@ namespace Rubi.Controllers
 
             var profile = new ProfileDto
             {
-                Id = user.Id,
+                Id = user.Id.ToString(),
                 Username = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,

@@ -7,7 +7,7 @@ using Rubi.Constants;
 
 namespace Rubi.Data.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser<Guid>
     {
         [Required]
         [MinLength(DataConstants.NAME_MIN_LENGTH)]

@@ -16,6 +16,10 @@ using Rubi.Infrastructure.DbExtension;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Rubi.Services.Db.Contracts;
+using Rubi.Services.Db.Implementations;
 
 namespace Rubi
 {
@@ -33,6 +37,11 @@ namespace Rubi
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+            });
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -40,18 +49,7 @@ namespace Rubi
                     .AddDbContext<ApplicationDbContext>()
                     .BuildServiceProvider();
 
-            //services.AddIdentityCore<ApplicationUser, IdentityRole>(options =>
-            //{
-            //    options.Password.RequireDigit = false;
-            //    options.Password.RequiredLength = 6;
-            //    options.Password.RequireLowercase = false;
-            //    options.Password.RequireNonAlphanumeric = false;
-            //    options.Password.RequireUppercase = false;
-            //})
-            //.AddEntityFrameworkStores<ApplicationDbContext>()
-            //.AddDefaultTokenProviders();
-
-            services.AddIdentityCore<ApplicationUser>(options => 
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 6;
@@ -59,17 +57,11 @@ namespace Rubi
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
 
-            });
-            new IdentityBuilder(typeof(ApplicationUser), typeof(IdentityRole), services)
-                .AddRoleManager<RoleManager<IdentityRole>>()
-                .AddSignInManager<SignInManager<ApplicationUser>>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
             services.AddDomainServices();
-
-            services.AddMvc()
-                    .AddFluentValidation();
 
             services.AddAutoMapper(typeof(Startup));
             //services.AddAutoMapper(Type assemblyTypeToSearch);
@@ -90,11 +82,16 @@ namespace Rubi
                     {
                         ValidateIssuer = false,
                         ValidateAudience = false,
-                        ValidAudience = Configuration["JwtIssuer"],
+                        //ValidAudience = Configuration["JwtIssuer"],
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["JwtKey"])),
                     };
                 });
+
+            services.AddMvc()
+                    .AddFluentValidation();
+
+            services.AddScoped<IDbInitializer, DbInitializer>();
 
             // In production, the Angular files will be served from this directory  ss
             services.AddSpaStaticFiles(configuration =>
@@ -104,10 +101,18 @@ namespace Rubi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDbInitializer dbInitializer)
         {
-            app.UseDatabaseMigration();
-            app.UseDatabaseMigrationWithIdentities();
+            //app.UseDatabaseMigrationWithIdentities();
+            //app.UseDatabaseMigration();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                //c.RoutePrefix = string.Empty;
+            });
 
             if (env.IsDevelopment())
             {
@@ -120,7 +125,7 @@ namespace Rubi
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseStaticFiles();
 
@@ -128,12 +133,9 @@ namespace Rubi
 
             app.UseAuthentication();
 
-            app.UseMvc(routes =>
-            {
-                //routes.MapRoute(
-                //    name: "default",
-                //    template: "{controller}/{action=Index}/{id?}");
-            });
+            dbInitializer.Initialize();
+
+            app.UseMvc();
 
             app.UseSpa(spa =>
             {

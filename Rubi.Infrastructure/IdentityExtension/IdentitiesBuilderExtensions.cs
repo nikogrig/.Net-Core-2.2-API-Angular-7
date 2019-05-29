@@ -25,13 +25,13 @@ namespace Rubi.Infrastructure.IdentityExtension
                 context.Database
                        .Migrate();
 
+                var roleManager = serviceScope
+                    .ServiceProvider
+                    .GetService<RoleManager<ApplicationRole>>();
+
                 var userManager = serviceScope
                      .ServiceProvider
                      .GetService<UserManager<ApplicationUser>>();
-
-                var roleManager = serviceScope
-                    .ServiceProvider
-                    .GetService<RoleManager<IdentityRole>>();
 
                 Task
                     .Run(async () =>
@@ -50,7 +50,7 @@ namespace Rubi.Infrastructure.IdentityExtension
 
                             if (!roleExists)
                             {
-                                await roleManager.CreateAsync(new IdentityRole
+                                await roleManager.CreateAsync(new ApplicationRole
                                 {
                                     Name = role
                                 });

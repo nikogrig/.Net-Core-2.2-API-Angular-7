@@ -1,16 +1,22 @@
-﻿using AutoMapper.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Rubi.Data.Models;
 using Rubi.Dtos;
 using Rubi.Services.Auth.Contracts;
 using Rubi.src.svc.contracts;
 using Rubi.Validators;
 using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using static Rubi.Constants.IdentitiesConstants;
+using Microsoft.EntityFrameworkCore;
 
 namespace Rubi.Controllers
 {
@@ -18,23 +24,22 @@ namespace Rubi.Controllers
     [Route("api/account")]
     public class AccountController : Controller
     {
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly IAuthService authService;
+        //private readonly ITokenGenerator tokenGenerator;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IConfiguration configuration;
-        private readonly ITokenGenerator tokenGenerator;
-        private readonly IEmailChecker emailCheckerService;
+        //private readonly IEmailChecker emailCheckerService;
 
-        public AccountController(IEmailChecker emailCheckerService, ITokenGenerator tokenGenerator, RoleManager<IdentityRole> roleManager, IAuthService authService, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
+        public AccountController(//ITokenGenerator tokenGenerator,  
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            IConfiguration configuration)
         {
-            this.tokenGenerator = tokenGenerator;
-            this.roleManager = roleManager;
-            this.authService = authService;
-            this.userManager = userManager;
+            //this.tokenGenerator = tokenGenerator;
             this.signInManager = signInManager;
+            this.userManager = userManager;
             this.configuration = configuration;
-            this.emailCheckerService = emailCheckerService;
+           // this.emailCheckerService = emailCheckerService;
         }
 
         // /register
@@ -46,18 +51,6 @@ namespace Rubi.Controllers
             if (!ModelState.IsValid)
             {
                 return Unauthorized();
-            }
-
-            var validator = new RegisterFormValidator(this.emailCheckerService);
-
-            var validatorResult = validator.Validate(model);
-
-            if (!validatorResult.IsValid)
-            {
-                foreach (var failure in validatorResult.Errors)
-                {
-                    Console.WriteLine("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
-                }
             }
 
             var user = new ApplicationUser
@@ -85,7 +78,7 @@ namespace Rubi.Controllers
 
                 await this.signInManager.SignInAsync(user, isPersistent: false);
 
-                return Ok(Authorize(user));
+                return Ok(GenerateJwtToken(user));
             }
 
             return Unauthorized();
@@ -101,27 +94,15 @@ namespace Rubi.Controllers
                 return Unauthorized();
             }
 
-            var validator = new LoginFormValidator();
-
-            var validatorResult = validator.Validate(model);
-
-            if (!validatorResult.IsValid)
-            {
-                foreach (var failure in validatorResult.Errors)
-                {
-                    Console.WriteLine("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
-                }
-            }
-
             var user = await this.userManager.FindByEmailAsync(model.Email);
 
             if (user != null && await this.userManager.CheckPasswordAsync(user, model.Password))
             {
-                var appUser = this.userManager
+                var appUser = await this.userManager
                     .Users
-                    .FirstOrDefault(r => r.Email == model.Email);
+                    .FirstOrDefaultAsync(r => r.Email == model.Email);
 
-                return Ok(Authorize(appUser));
+                return Ok(GenerateJwtToken(appUser));
             }
 
             return Unauthorized();
@@ -138,18 +119,49 @@ namespace Rubi.Controllers
             return Ok("Successfully loged out! Come back again!");
         }
 
-        private async Task<object> Authorize(ApplicationUser user)
+        private object GenerateJwtToken(ApplicationUser user)
         {
-            var userToken = await this.tokenGenerator.GenerateJwtTokenAsync(user);
+            var roles = this.userManager.GetRolesAsync(user);
 
-            if (userToken == null)
+            var userRole = string.Empty;
+
+            foreach (var role in roles.Result)
             {
-                return StatusCode(500, "User cannot be null.");
+                userRole = role;
+                break;
             }
+
+            var claimIdentity = new ClaimsIdentity();
+
+            var claimsList = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, userRole)
+            };
+
+            claimIdentity.AddClaims(claimsList.ToList());
+
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(this.configuration["JwtKey"]));
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = claimIdentity,
+                //Audience = this.configuration["JwtIssuer"],
+                //Issuer = this.configuration["JwtIssuer"],
+                Expires = DateTime.UtcNow.AddDays(Convert.ToInt32(configuration["JwtExpireDays"])),
+                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature),
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var tokenCreator = tokenHandler.CreateToken(tokenDescriptor);
+
+            var userToken = tokenHandler.WriteToken(tokenCreator);
 
             var model = new JwtAuthDto
             {
-                Id = user.Id,
+                Id = user.Id.ToString(),
                 Username = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -157,27 +169,9 @@ namespace Rubi.Controllers
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 Birthdate = user.Birthdate,
-                Role = userToken.Role,
-                Token = userToken.Token
+                Role = userRole,
+                Token = userToken
             };
-
-            var validator = new JwtAuthValidator();
-
-            var validatorResult = validator.Validate(model);
-
-            if (!validatorResult.IsValid)
-            {
-                foreach (var failure in validatorResult.Errors)
-                {
-                    Console.WriteLine("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
-                }
-            }
-
-            if (model == null)
-            {
-                return StatusCode(500, "Model cannot be null.");
-
-            }
 
             return model;
         }

@@ -30,7 +30,7 @@ namespace Rubi.Services.Admin.Implementations
             return users;
         }
 
-        public async Task<UsersListingServiceModel> GetUserDetailByIdAsync(string id)
+        public async Task<UsersListingServiceModel> GetUserDetailByIdAsync(Guid id)
         {
             var user = await this.db
                 .Users
@@ -41,7 +41,7 @@ namespace Rubi.Services.Admin.Implementations
             return user;
         }
 
-        public async Task<EditUserServiceModel> UpdateUserDataByIdAsync(string id, string username, string firstName, string lastName, string phoneNumber, string address, DateTime birthdate)
+        public async Task<EditUserServiceModel> UpdateUserDataByIdAsync(Guid id, string username, string firstName, string lastName, string phoneNumber, string address, DateTime birthdate)
         {
             var user = await this.db
                 .Users
