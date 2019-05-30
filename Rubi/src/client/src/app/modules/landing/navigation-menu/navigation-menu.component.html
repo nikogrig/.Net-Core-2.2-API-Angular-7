@@ -1,0 +1,19 @@
+<header class="header-6">
+    <div class="branding">
+        <a class="nav-link" routerLink="/">
+            <clr-icon shape="vm-bug"></clr-icon>
+            <span class="title">Ruby Clarity</span>
+        </a>
+    </div>
+    <div class="header-nav active">
+        <a class="active nav-link" routerLink=""><span class="nav-text">Home</span></a>
+        <a class="nav-link" routerLink=""><span class="nav-text">Dashboard</span></a>
+        <a class="nav-link" routerLink=""><span class="nav-text">Interactive Analytics</span></a>
+    </div>
+    <div class="header-actions">
+        <a *ngIf="!authService.checkIfLoggedIn()" class="nav-link" routerLink="/login"><span class="nav-text">Login</span></a>
+        <a *ngIf="authService.checkIfLoggedIn()" (click)="logout()">Logout<span class="nav-text">Logout</span></a>
+        <a *ngIf="authService.checkIfLoggedIn()" routerLink="/profile/{{getId()}}">Profile<span lass="nav-text">Profile</span></a>
+        <a routerLink="" class="nav-link nav-icon"><clr-icon shape="cog"></clr-icon></a>
+    </div>
+</header>

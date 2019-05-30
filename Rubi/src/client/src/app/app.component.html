@@ -1,6 +1,8 @@
 <body>
-  <app-nav-menu></app-nav-menu>
+  <app-navigation-menu></app-navigation-menu>
+  <app-jumbotron *ngIf="router.url == '/'"></app-jumbotron>
+  <app-home *ngIf="router.url == '/'"></app-home>
   <div class="container">
-    <router-outlet></router-outlet>
+      <router-outlet></router-outlet>
   </div>
 </body>
