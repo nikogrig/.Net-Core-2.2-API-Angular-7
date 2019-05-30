@@ -20,6 +20,12 @@ using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Rubi.Services.Db.Contracts;
 using Rubi.Services.Db.Implementations;
+using Rubi.Filters;
+using FluentValidation;
+using Rubi.Dtos;
+using Rubi.Validators;
+using System.Linq;
+using MicroElements.Swashbuckle.FluentValidation;
 
 namespace Rubi
 {
@@ -35,11 +41,18 @@ namespace Rubi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .AddFluentValidation(c =>
+                {
+                c.RegisterValidatorsFromAssemblyContaining<Startup>();
+                }) 
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.OperationFilter<AuthResponsesOperationFilter>();
+                c.AddFluentValidationRules();
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -67,6 +80,10 @@ namespace Rubi
             //services.AddAutoMapper(Type assemblyTypeToSearch);
             //services.AddAutoMapper(params Type[] assemblyTypesToSearch);
 
+            //services.AddTransient<IValidator<RegisterFormDto>, RegisterFormValidator>();
+            var serviceDescriptors = services.Where(descriptor => descriptor.ServiceType.GetInterfaces().Contains(typeof(IValidator))).ToList();
+            serviceDescriptors.ForEach(descriptor => services.Add(ServiceDescriptor.Transient(typeof(IValidator), descriptor.ImplementationType)));
+
             services
                 .AddAuthentication(option =>
                 {
@@ -88,9 +105,6 @@ namespace Rubi
                     };
                 });
 
-            services.AddMvc()
-                    .AddFluentValidation();
-
             services.AddScoped<IDbInitializer, DbInitializer>();
 
             // In production, the Angular files will be served from this directory  ss
@@ -106,7 +120,9 @@ namespace Rubi
             //app.UseDatabaseMigrationWithIdentities();
             //app.UseDatabaseMigration();
 
-            app.UseSwagger();
+            app.UseMvc()
+               //.UseScopedSwagger();
+               .UseSwagger();
 
             app.UseSwaggerUI(c =>
             {
@@ -134,8 +150,6 @@ namespace Rubi
             app.UseAuthentication();
 
             dbInitializer.Initialize();
-
-            app.UseMvc();
 
             app.UseSpa(spa =>
             {

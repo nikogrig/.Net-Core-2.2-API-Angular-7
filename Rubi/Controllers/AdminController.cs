@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Rubi.Data.Models;
 using Rubi.Dtos;
 using Rubi.Services.Admin.Contracts;
-using Rubi.src.svc.contracts;
 using Rubi.Validators;
 using System;
 using System.Threading.Tasks;
@@ -20,14 +19,12 @@ namespace Rubi.Controllers
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IAdminService adminService;
-        private readonly IEmailChecker emailCheckerService;
 
-        public AdminController(IEmailChecker emailCheckerService, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IAdminService adminService)
+        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IAdminService adminService)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
             this.adminService = adminService;
-            this.emailCheckerService = emailCheckerService;
         }
 
         // /get-roles
@@ -55,18 +52,6 @@ namespace Rubi.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            //var validator = new CreateUserByAdminValidator(this.emailCheckerService);
-            //
-            //var validatorResult = validator.Validate(model);
-            //
-            //if (!validatorResult.IsValid)
-            //{
-            //    foreach (var failure in validatorResult.Errors)
-            //    {
-            //        Console.WriteLine("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
-            //    }
-            //}
 
             var user = new ApplicationUser
             {

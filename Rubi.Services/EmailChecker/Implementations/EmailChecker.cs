@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Rubi.Data.Models;
-using Rubi.src.svc.contracts;
+using Rubi.Services.EmailChecker.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Rubi.src.svc.Implementations
+namespace Rubi.Services.EmailChecker.Implementations
 {
     public class EmailChecker : IEmailChecker
     {

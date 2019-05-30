@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+
 namespace Rubi.Dtos
 {
     public class RegisterFormDto

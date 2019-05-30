@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Rubi.Constants;
 using Rubi.Dtos;
-using Rubi.src.svc.contracts;
+using Rubi.Services.EmailChecker.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +27,7 @@ namespace Rubi.Validators
                .NotNull()
                .NotEmpty()
                .Must(ValidateMailIfExist)
+               .WithMessage("Current email is exist in db")
                .Matches(@"^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")
                .WithMessage($"The field Email cannot be empty or null and must be valid pattern.");
 

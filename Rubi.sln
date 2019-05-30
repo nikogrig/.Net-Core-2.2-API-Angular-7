@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rubi.Infrastructure", "Rubi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rubi.Constants", "Rubi.Constants\Rubi.Constants.csproj", "{A2C76353-2029-4C9D-B3FB-FB76F8548665}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rubi.Common", "Rubi.Common\Rubi.Common.csproj", "{38963F62-9F6F-4FF1-8E7F-AE641FA10576}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rubi.Common", "Rubi.Common\Rubi.Common.csproj", "{38963F62-9F6F-4FF1-8E7F-AE641FA10576}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

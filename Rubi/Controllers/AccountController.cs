@@ -4,10 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Rubi.Data.Models;
-using Rubi.Dtos;
-using Rubi.Services.Auth.Contracts;
-using Rubi.src.svc.contracts;
-using Rubi.Validators;
+using Rubi.Dtos;   
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,6 +14,8 @@ using System.Text;
 using System.Threading.Tasks;
 using static Rubi.Constants.IdentitiesConstants;
 using Microsoft.EntityFrameworkCore;
+using Rubi.Filters;
+
 
 namespace Rubi.Controllers
 {
@@ -24,7 +23,6 @@ namespace Rubi.Controllers
     [Route("api/account")]
     public class AccountController : Controller
     {
-        //private readonly ITokenGenerator tokenGenerator;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IConfiguration configuration;
@@ -35,7 +33,6 @@ namespace Rubi.Controllers
             UserManager<ApplicationUser> userManager,
             IConfiguration configuration)
         {
-            //this.tokenGenerator = tokenGenerator;
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.configuration = configuration;
@@ -43,14 +40,13 @@ namespace Rubi.Controllers
         }
 
         // /register
-        // added fluent validation
         [Route("register")]
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterFormDto model)
         {
             if (!ModelState.IsValid)
             {
-                return Unauthorized();
+                return BadRequest(ModelState);
             }
 
             var user = new ApplicationUser
@@ -91,7 +87,7 @@ namespace Rubi.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return Unauthorized();
+                return BadRequest(ModelState);
             }
 
             var user = await this.userManager.FindByEmailAsync(model.Email);

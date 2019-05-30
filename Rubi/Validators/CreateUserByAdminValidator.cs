@@ -8,7 +8,7 @@ using Rubi.Constants;
 using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using Rubi.Data.Models;
-using Rubi.src.svc.contracts;
+using Rubi.Services.EmailChecker.Contracts;
 
 namespace Rubi.Validators
 {
