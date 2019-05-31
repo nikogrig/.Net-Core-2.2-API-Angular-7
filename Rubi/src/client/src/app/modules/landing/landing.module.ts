@@ -10,12 +10,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthService } from 'src/app/services/auth.service';
+import { HeaderHighLightDirective } from 'src/app/directives/header.directive';
 
 @NgModule({
   declarations: [
     NavigationMenuComponent,
     HomeComponent,
-    JumbotronComponent
+    JumbotronComponent,
+    HeaderHighLightDirective
   ],
   imports: [
     NgbModule,
@@ -34,7 +36,8 @@ import { AuthService } from 'src/app/services/auth.service';
     ClarityModule,
     NavigationMenuComponent,
     HomeComponent,
-    JumbotronComponent
+    JumbotronComponent,
+    HeaderHighLightDirective
   ],
 })
 export class LandingModule { }
