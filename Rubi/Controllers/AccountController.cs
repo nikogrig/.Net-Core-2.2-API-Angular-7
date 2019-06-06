@@ -92,7 +92,12 @@ namespace Rubi.Controllers
 
             var user = await this.userManager.FindByEmailAsync(model.Email);
 
-            if (user != null && await this.userManager.CheckPasswordAsync(user, model.Password))
+            if (user == null)
+            {
+                StatusCode(401, "Email or/and Password is/are invalid, called from user == null");
+            }
+
+            if (await this.userManager.CheckPasswordAsync(user, model.Password))
             {
                 var appUser = await this.userManager
                     .Users
@@ -101,7 +106,7 @@ namespace Rubi.Controllers
                 return Ok(GenerateJwtToken(appUser));
             }
 
-            return Unauthorized();
+            return StatusCode(401, "Email or/and Password is/are invalid, , called from checkPassword == null");
         }
 
         // /logout                    

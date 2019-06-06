@@ -1,45 +1,53 @@
-<div clr-input-container >
-  <div class="row">
-      <div class="col-md-3">        
-      </div>
-      <div class="col-md-6">
-              <div class="card">
-                  <article class="card-body">
+<div clr-input-container>
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <article class="card-body">
                         <a class="float-left btn btn-primary" routerLink="/register">Sign up</a>
                         <h4 class="card-title mb-4 mt-1 text-right">Sign in</h4>
                         <p>
-                          <a href="" class="btn btn-block btn-outline-info"> <i class="fab fa-twitter"></i>   Login via Twitter</a>
-                          <a href="" class="btn btn-block btn-outline-info"> <i class="fab fa-facebook-f"></i>   Login via facebook</a>
-                        </p>
-                        <hr>
-                        <form clrForm #loginForm="ngForm" (ngSubmit)="login()">
-                          <div class="form-group">
-                              <input clrInput type="text" class="form-control" #emailField="ngModel" name="email" [(ngModel)]="model.email" placeholder="Email" required>
-                              <div class="alert alert-danger" [hidden]="passwordField.pristine || passwordField.valid">Password must contain only letters and digits and must be between 4 and 16 symbols.</div>
-                          </div> 
-                          <div class="form-group">
-                              <input type="password" class="form-control" #passwordField="ngModel" name="password" [(ngModel)]="model.password" placeholder="******" type="password" required>
-                              <div class="alert alert-danger" [hidden]="passwordField.pristine || passwordField.valid">Password must contain only letters and digits and must be between 4 and 16 symbols.</div>      
-                          </div>                                    
-                          <div class="row">
-                              <div class="col-md-6">
-                                  <div class="form-group">
-                                      <button [disabled]="!loginForm.form.valid" type="submit" class="btn btn-primary btn-block">Login</button>
-                                  </div> 
-                              </div>
-                              <div class="col-md-6 text-right">
-                                  <a class="small" href="#">Forgot password?</a>
-                              </div>                                            
-                          </div>                                                                 
-                      </form>
-                  </article>
-              </div> 
-       </div>
-
-      <div class="col-md-3">
-          
-      </div>
-  </div>
+                        <a href="" class="btn btn-block btn-outline-info"> <i class="fab fa-twitter"></i>   Login via
+                            Twitter</a>
+                        <a href="" class="btn btn-block btn-outline-info"> <i class="fab fa-facebook-f"></i>   Login via
+                            facebook</a>
+                    </p>
+                    <hr>
+                    <form clrForm #loginForm="ngForm" (ngSubmit)="login()">
+                        <clr-input-container class="form-group">
+                            <label class="clr-col-4">Email</label>
+                            <input clrInput type="text" pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+                             #emailField="ngModel" [(ngModel)]="model.email" name="email" placeholder="my.mail@example.com" required />
+                            <clr-control-helper>Type your email. The mail must be valid!</clr-control-helper>
+                            <clr-control-error>The email is invalid!</clr-control-error>
+                            <!-- <div class="alert alert-danger" [hidden]="emailField.pristine || emailField.valid">text</div> -->
+                        </clr-input-container>
+                        <clr-input-container  class="form-group">
+                            <label class="clr-col-4">Password</label>
+                            <input clrInput type="password" pattern="^[A-Za-z\d]{4,16}$" #passwordField="ngModel" [(ngModel)]="model.password"
+                                placeholder="******" name="password" required />
+                            <clr-control-helper>Type your super secret password!</clr-control-helper>
+                            <clr-control-error>Password must contain only letters and digits and must be between 4 and
+                                16 symbols.</clr-control-error>
+                            <!-- <div class="alert alert-danger" [hidden]="passwordField.pristine || passwordField.valid">teext</div> -->
+                        </clr-input-container>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <button type="submit" [disabled]="!loginForm.form.valid"
+                                        class="btn btn-primary btn-block">Login</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <a class="small" href="#">Forgot password?</a>
+                            </div>
+                        </div>
+                    </form>
+                </article>
+            </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+    </div>
 </div>
-
-  

@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { RegisterModel, LoginModel } from '../models/auth.read.model';
+import { RegisterModel, LoginModel } from '../models/read.model';
 
-const ulr = "http://localhost:5000/api/account"
+const ulr = "https://localhost:5001/api/account"
 
 @Injectable()
 export class AuthService {
@@ -37,6 +37,7 @@ export class AuthService {
     }
 
      authentificate(data) {
+        console.log(data)
         this.currentAuthtoken =  data.token;
         localStorage.setItem('currentUser', JSON.stringify({ 
              id: data.id,

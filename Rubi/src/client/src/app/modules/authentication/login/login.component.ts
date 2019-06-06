@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LoginModel } from 'src/app/models/auth.read.model';
+import { LoginModel } from 'src/app/models/read.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';

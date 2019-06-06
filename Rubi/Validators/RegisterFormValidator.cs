@@ -41,7 +41,7 @@ namespace Rubi.Validators
             RuleFor(u => u.LastName)
                .NotNull()
                .NotEmpty()
-               .Length(DataConstants.NAME_MAX_LENGTH, DataConstants.NAME_MAX_LENGTH)
+               .Length(DataConstants.NAME_MIN_LENGTH, DataConstants.NAME_MAX_LENGTH)
                .Matches(@"^[a-zA-Z]+$")
                .WithMessage($"The field LastName cannot be empty or null. The length of field must be between {DataConstants.NAME_MIN_LENGTH} and {DataConstants.NAME_MAX_LENGTH} and should contain only letters.");
 
@@ -54,9 +54,9 @@ namespace Rubi.Validators
             RuleFor(u => u.Birthdate)
                .NotEmpty()
                .NotNull()
-               .LessThanOrEqualTo(a => DateTime.Parse("1/1/1900"))
-               .GreaterThanOrEqualTo(a => DateTime.Parse("1/1/2010"))
-               .WithMessage($"The field Birthdate cannot be empty or null. The length of field must be between {DataConstants.NAME_MIN_LENGTH} and {DataConstants.NAME_MAX_LENGTH} and should contain only letters.");
+               .GreaterThanOrEqualTo(a => DateTime.Parse("1/1/1900"))
+               .LessThanOrEqualTo(a => DateTime.Parse("1/1/2010"))
+               .WithMessage($"The field Birthdate cannot be empty or null.");
 
             RuleFor(u => u.Address)
                .NotNull()
@@ -66,7 +66,12 @@ namespace Rubi.Validators
 
         private bool ValidateMailIfExist(string email)
         {
-            return this.emailCheckerService.EmailExist(email);
+            if (this.emailCheckerService.EmailExist(email))
+            {
+                return false;
+            }
+
+            return true;      
         }
     }
 }

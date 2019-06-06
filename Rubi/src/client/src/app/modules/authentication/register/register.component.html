@@ -1,3 +1,91 @@
-<p>
-  register works!
-</p>
+<div clr-input-container>
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <article class="card-body">
+                        <a class="float-right btn btn-primary" routerLink="/login">Sign in</a>
+                        <h4 class="card-title mb-4 mt-1">Sign up</h4>
+                    <p>
+                        <a href="" class="btn btn-block btn-outline-info"> <i class="fab fa-twitter"></i>   Login via
+                            Twitter</a>
+                        <a href="" class="btn btn-block btn-outline-info"> <i class="fab fa-facebook-f"></i>   Login via
+                            facebook</a>
+                    </p>
+                    <hr>
+                  <form clrForm #registerForm="ngForm" (ngSubmit)="register()">
+                      <clr-input-container class="form-group">
+                          <label class="clr-col-4">Username</label>
+                          <input clrInput type="text" class="form-control" pattern="^[A-Za-z]+\w*$" #usernameField="ngModel" name="username" [(ngModel)]="model.username" placeholder="User name" required>
+                          <!-- <div class="alert alert-danger" *ngIf="usernameField.touched && usernameField.errors.required">Username is required!</div> -->
+                          <clr-control-error class="alert alert-danger" [hidden]="usernameField.pristine || usernameField.valid">Username must contain only letters and digits.</clr-control-error>
+                      </clr-input-container>  
+                      <clr-input-container class="form-group">
+                          <label class="clr-col-4">Email</label>
+                          <input clrInput type="text" class="form-control" pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" #emailField="ngModel" name="email" [(ngModel)]="model.email" placeholder="Email" required>
+                          <clr-control-error class="alert alert-danger" [hidden]="emailField.pristine || emailField.valid">Enter valid Email Address.</clr-control-error>
+                       </clr-input-container> 
+                        <clr-input-container class="form-group">
+                            <label class="clr-col-4">Password</label>
+                            <input clrInput type="password" class="form-control" pattern="^[A-Za-z\d]{4,16}$" #passwordField="ngModel" name="password" [(ngModel)]="model.password" placeholder="******" required>
+                            <clr-control-error class="alert alert-danger" [hidden]="passwordField.pristine || passwordField.valid">Password must contain only letters and digits and must be between 4 and 16 symbols.</clr-control-error>
+                          </clr-input-container> 
+                        <clr-input-container class="form-group">
+                            <label class="clr-col-4">Confirm Password</label>
+                                  <input clrInput type="password" class="form-control" pattern="^[A-Za-z\d]{4,16}$" #confirmPasswordField="ngModel" name="confirmPassword" [(ngModel)]="model.confirmPassword" placeholder="Confirm password" required>
+                                  <clr-control-error 
+                                  class="alert alert-danger" 
+                                  [hidden]="( confirmPasswordField.pristine || confirmPasswordField.valid ) 
+                                           && confirmPasswordField.value === passwordField.value">Both passwords must match.
+                                  </clr-control-error>
+                        </clr-input-container>
+                        <clr-input-container class="form-group">
+                            <label class="clr-col-4">First name</label>
+                                <input clrInput type="text" class="form-control" pattern="^[A-Z]{1}[a-z]+$" #firstNameField="ngModel" name="firstName" [(ngModel)]="model.firstName" placeholder="First name" required>
+                                <clr-control-error class="alert alert-danger" [hidden]="firstNameField.pristine || firstNameField.valid">Names must contain only letters and start with a capital letter.</clr-control-error>
+                          </clr-input-container> 
+                        <clr-input-container class="form-group">
+                            <label class="clr-col-4">Last name</label>
+                                <input clrInput type="text" class="form-control" pattern="^[A-Z]{1}[a-z]+$" #lastNameField="ngModel" name="lastName" [(ngModel)]="model.lastName" placeholder="Last name" required>
+                                <clr-control-error class="alert alert-danger" [hidden]="lastNameField.pristine || lastNameField.valid">Names must contain only letters and start with a capital letter.</clr-control-error>    
+                         </clr-input-container> 
+                        <clr-input-container class="form-group">
+                            <label class="clr-col-4">Phone number</label>
+                                <input clrInput type="text" class="form-control" pattern="^[+0-9]{10,14}$" #phoneNumberField="ngModel" name="phoneNumber" [(ngModel)]="model.phoneNumber" placeholder="Phone number" required>
+                                <clr-control-error class="alert alert-danger" [hidden]="phoneNumberField.pristine || phoneNumberField.valid">Phone number must contain only digits and start can be start with '+' sign.</clr-control-error>
+                          </clr-input-container> 
+                        <clr-input-container class="form-group">
+                            <label class="clr-col-4">Address</label>
+                                <input clrInput type="text" class="form-control" #addressField="ngModel" name="address" [(ngModel)]="model.address" placeholder="Address" required>
+                                <clr-control-error class="alert alert-danger" [hidden]="addressField.pristine || addressField.valid">Adress must be writen.</clr-control-error>
+                          </clr-input-container> 
+                        <clr-input-container class="form-group">
+                            <label class="clr-col-4">Birth Date</label>
+                                <input clrInput type="date" class="form-control" #bithDateField="ngModel" name="birthDate" [(ngModel)]="model.birthDate" required>
+                                <clr-control-error class="alert alert-danger" [hidden]="bithDateField.pristine || bithDateField.valid">Enter valid field.</clr-control-error>
+                          </clr-input-container> 
+                          <div class="form-group">
+                              <label for="file">Choose File</label>
+                              <input type="file"
+                                     id="file"
+                                     (change)="handleFileInput($event.target.files)">
+                            </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <button [disabled]="!registerForm.form.valid" type="submit" class="btn btn-primary tn-block">Register</button>                        </div> 
+                              </div>
+                          <div class="col-md-6 text-right">
+                            <a class="small" href="#">Forgot password?</a>
+                          </div>                                            
+                    </div>                                                                 
+                </form>   
+               </article>
+              </div> 
+        </div>
+        <div class="col-md-3">         
+        </div>
+    </div>
+</div>
+    

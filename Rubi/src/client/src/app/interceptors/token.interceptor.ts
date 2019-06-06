@@ -26,21 +26,21 @@ export class TokenInterceptor implements HttpInterceptor {
 
 		return next.handle(request)
 			.pipe(tap((response: HttpResponse<any>) => { //TODO: /register
-				if (response instanceof HttpResponse && (response.url.endsWith('login') || response.url.endsWith('register'))) {	//&& response.body.result.token	
-					this.saveDataStorage(response.body.result);
-				}
-				
+				console.log(response)
 				if (response instanceof HttpResponse && response.url.endsWith('login')) {
-                    this.toastr.success(`Hello ${response.body.result.username}`, 'You have successfully login!')				
+					this.saveDataStorage(response.body);
+                   		this.toastr.success(`Hello ${response.body.username}`, 'You have successfully login!')				
 				}
 
 				if (response instanceof HttpResponse && response.url.endsWith('register')) {
-                    this.toastr.success(`$Your new username is ${response.body.result.username}`, 'You have successfully register!')
+				    this.saveDataStorage(response.body);
+           	         this.toastr.success(`$Your new username is ${response.body.username}`, 'You have successfully register!')
 				}
 		}));
 	}
 
     private saveDataStorage(data) {
+	    console.log(data)
 		this.authService.authentificate(data);
         this.router.navigate(['']);
 	}

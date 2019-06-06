@@ -8,6 +8,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LandingModule } from './modules/landing/landing.module';
 import { RoutingModule } from './modules/routing/routing.module';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
+import { ErrorModule } from './modules/error/error.module';
+import { ProfileModule } from './modules/profile/profile.module';
+import { AdminPanelModule } from './modules/admin-panel/admin-panel.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,10 @@ import { AuthenticationModule } from './modules/authentication/authentication.mo
     FormsModule,
     RoutingModule,
     AuthenticationModule,
+    AdminPanelModule,
+    ErrorModule,
     ClarityModule,
+    ProfileModule,
     BrowserAnimationsModule
   ],
   providers: [],
