@@ -14,7 +14,8 @@ export class AdminInterceptor implements HttpInterceptor {
 
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		return next.handle(request)
-			.pipe(tap((response: HttpResponse<any>) => {				
+			.pipe(tap((response: HttpResponse<any>) => {
+				console.log(response)				
 				if (response instanceof HttpResponse && response.url.endsWith('users')){ //
 					 this.getListUsers(response.body);
 				 }
@@ -31,7 +32,7 @@ export class AdminInterceptor implements HttpInterceptor {
 	}
 
 	private getListUsers(response){
-		this.adminService.pushUsers(response);
+		this.adminService.getUsersFromStore(response);
 	}
 	
 	// with selector from store

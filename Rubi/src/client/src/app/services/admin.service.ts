@@ -8,7 +8,7 @@ import { CreateUserModel } from '../models/write.model';
 import { UsersListModel } from '../models/read.model';
 
 
-const url = "http://localhost:5000/api/admin"
+const url = "https://localhost:5001/api/admin"
 
 @Injectable()
 export class AdminService {
@@ -67,7 +67,8 @@ export class AdminService {
     //     this.store.dispatch(new GetUserDetailAction(user))
     // }
 
-    pushUsers(response: HttpResponse<any>): void {
+    getUsersFromStore(response: HttpResponse<any>): void {
+        console.log(response)
         const users: UsersListModel[]  = [];             
                 for (let i of Object.keys(response)) {
                     users.push(new UsersListModel(

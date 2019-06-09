@@ -15,12 +15,22 @@ import { EditUserComponent } from './edit-user/edit-user.component';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { AdminService } from 'src/app/services/admin.service';
 import { AdminInterceptor } from 'src/app/interceptors/admin.interceptor';
+import { ClarityModule } from '@clr/angular';
+import { SidenavHighLightDirective } from 'src/app/directives/sidenav.directive';
 
 @NgModule({
-  declarations: [AdminPanelComponent, GetUserComponent, UserDetailComponent, EditUserComponent, CreateUserComponent],
+  declarations: [
+    AdminPanelComponent, 
+    GetUserComponent, 
+    UserDetailComponent, 
+    EditUserComponent, 
+    CreateUserComponent,
+    SidenavHighLightDirective,
+  ],
   imports: [
     CommonModule,
     StoreModule.forRoot(adminReducers),
+    ClarityModule,
     FormsModule,
     ToastrModule.forRoot(),
     ReactiveFormsModule,
@@ -37,6 +47,11 @@ import { AdminInterceptor } from 'src/app/interceptors/admin.interceptor';
       multi: true 
     }
    ],
-  exports: [ GetUserComponent, AdminPanelComponent, UserDetailComponent, EditUserComponent, CreateUserComponent ]
+  exports: [ GetUserComponent, 
+    AdminPanelComponent, 
+    UserDetailComponent, 
+    EditUserComponent, 
+    CreateUserComponent, 
+    SidenavHighLightDirective ]
 })
 export class AdminPanelModule { }

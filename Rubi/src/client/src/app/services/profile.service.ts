@@ -6,7 +6,7 @@ import { UserProfileModel } from '../models/read.model';
 import { EditProfileModel } from '../models/write.model';
 
 
-const url = "http://localhost:5000/api/profile"
+const url = "https://localhost:5001/api/profile"
 
 @Injectable()
 export class ProfileService {

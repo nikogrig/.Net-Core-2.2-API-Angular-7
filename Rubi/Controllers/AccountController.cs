@@ -150,7 +150,7 @@ namespace Rubi.Controllers
                 Subject = claimIdentity,
                 //Audience = this.configuration["JwtIssuer"],
                 //Issuer = this.configuration["JwtIssuer"],
-                Expires = DateTime.UtcNow.AddDays(Convert.ToInt32(configuration["JwtExpireDays"])),
+                //Expires = DateTime.UtcNow.AddDays(Convert.ToInt32(configuration["JwtExpireDays"])),
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature),
             };
 

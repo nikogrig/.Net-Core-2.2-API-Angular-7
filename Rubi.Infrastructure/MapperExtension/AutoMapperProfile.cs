@@ -42,7 +42,7 @@ namespace Rubi.Infrastructure.MapperExtension
                 .ToList();
 
             foreach (var mapping in mappings)
-            {
+            {               
                 this.CreateMap(mapping.Source, mapping.Destination);
             }
 
@@ -53,6 +53,7 @@ namespace Rubi.Infrastructure.MapperExtension
                   .Select(Activator.CreateInstance)
                   .Cast<ICustomMapperProfile>()
                   .ToList();
+
 
             foreach (var custmap in customMappings)
             {

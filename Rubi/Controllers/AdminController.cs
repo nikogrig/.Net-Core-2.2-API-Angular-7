@@ -16,11 +16,11 @@ namespace Rubi.Controllers
     [Authorize(Roles = ADMINISTRATOR_ROLE)]
     public class AdminController : Controller
     {
-        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly RoleManager<ApplicationRole> roleManager;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IAdminService adminService;
 
-        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IAdminService adminService)
+        public AdminController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, IAdminService adminService)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;

@@ -26,6 +26,8 @@ using Rubi.Dtos;
 using Rubi.Validators;
 using System.Linq;
 using MicroElements.Swashbuckle.FluentValidation;
+using Rubi.Common;
+using Rubi.Infrastructure.MapperExtension;
 
 namespace Rubi
 {
@@ -77,8 +79,15 @@ namespace Rubi
             services.AddDomainServices();
 
             services.AddAutoMapper(typeof(Startup));
-            //services.AddAutoMapper(Type assemblyTypeToSearch);
-            //services.AddAutoMapper(params Type[] assemblyTypesToSearch);
+
+            //var mappingConfig = new MapperConfiguration(mc =>
+            //{
+            //    mc.AddProfile(new AutoMapperProfile());
+            //});
+
+            //IMapper mapper = mappingConfig.CreateMapper();
+
+            //services.AddSingleton(mapper);
 
             //services.AddTransient<IValidator<RegisterFormDto>, RegisterFormValidator>();
             var serviceDescriptors = services.Where(descriptor => descriptor.ServiceType.GetInterfaces().Contains(typeof(IValidator))).ToList();
@@ -119,6 +128,7 @@ namespace Rubi
         {
             //app.UseDatabaseMigrationWithIdentities();
             //app.UseDatabaseMigration();
+            app.UseAuthentication();
 
             app.UseMvc()
                //.UseScopedSwagger();
@@ -147,7 +157,6 @@ namespace Rubi
 
             app.UseSpaStaticFiles();
 
-            app.UseAuthentication();
 
             dbInitializer.Initialize();
 
