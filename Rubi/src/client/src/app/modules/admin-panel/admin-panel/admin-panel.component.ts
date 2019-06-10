@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { UsersListModel } from 'src/app/models/read.model';
 import { Store, select } from '@ngrx/store';
 import { AdminState } from 'src/app/store/admin.state';
+import * as userSelectors from '../../../store/selectors/users.selector';
 
 @Component({
   selector: 'app-admin-panel',
@@ -13,6 +14,7 @@ import { AdminState } from 'src/app/store/admin.state';
 export class AdminPanelComponent {
 
   users$: Observable<UsersListModel[]>;
+  userModel: UsersListModel[];
   private showAllUsersFlag: boolean = false;
   private showCreateUserFlag: boolean = false;
 
@@ -31,12 +33,8 @@ export class AdminPanelComponent {
   }
 
   private getListOfUsers(){ // TODO get user from stor without call server
-    this.adminService
-    .getAllUsers()
-    .subscribe(() => {
-      this.users$ = this.store.pipe(select(state => state.users.all)); // working without pipe, because is observable
-    });
-  }
 
+    this.users$ = this.store.pipe(select(state => state.users.all));
+  }
 }
 

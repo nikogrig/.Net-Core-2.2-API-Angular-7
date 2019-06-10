@@ -1,10 +1,10 @@
 <div class="main-container">
   <div class="content-container">
-      <div class="content-area">
+      <div class="content-area col-md-12">
             <app-get-user *ngIf="showAllUsersFlag"></app-get-user>  
             <app-create-user *ngIf="showCreateUserFlag"></app-create-user>
       </div>
-      <nav class="sidenav">
+      <nav class="sidenav col-md-3">
           <section class="sidenav-content">
               <a (click)="getAllUsers()" sidenavHightLight class="nav-link">All Users</a>
               <a (click)="createUser()" sidenavHightLight class="nav-link">Create User</a>
@@ -22,7 +22,7 @@
                   <label for="tabexample2">Users List</label>
                   <ul *ngIf="users$" class="nav-list">
                       <li *ngFor="let user of users$ | async ; let i = index">
-                          <a sidenavHightLight routerLink="/admin/panel/edit-user/{{user.id}}" class="nav-link">{{user.username}}</a>
+                          <a sidenavHightLight routerLink="/admin/panel/edit-user/{{user.id}}" class="nav-link">Edit - {{user.username}}</a>
                       </li>
                   </ul>
               </section>

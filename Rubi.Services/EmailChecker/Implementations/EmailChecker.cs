@@ -17,7 +17,11 @@ namespace Rubi.Services.EmailChecker.Implementations
         }
         public bool EmailExist(string email)
         {
-            return this.userManager.FindByEmailAsync(email) != null;
+            if (this.userManager.FindByEmailAsync(email) == null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

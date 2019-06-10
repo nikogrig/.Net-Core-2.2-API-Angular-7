@@ -43,7 +43,7 @@ export class GetUserComponent implements OnInit {
     .deleteUser(this.modalUser.id)
     .subscribe(() => {
       setTimeout(() => {
-        this.getListOfUsers();
+        //this.getListOfUsers();
       }, 500); 
       this.toastr.success(`${this.modalUser.username}`, 'Successfully deleted');
     })
