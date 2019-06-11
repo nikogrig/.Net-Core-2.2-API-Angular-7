@@ -66,12 +66,7 @@ namespace Rubi.Validators
 
         private bool ValidateMailIfExist(string email)
         {
-            if (this.emailCheckerService.EmailExist(email))
-            {
-                return false;
-            }
-
-            return true;      
+            return this.emailCheckerService.EmailExist(email);
         }
     }
 }

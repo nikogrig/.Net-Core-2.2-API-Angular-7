@@ -1,5 +1,5 @@
 <div *ngIf="users$" class="album py-5 bg-light">
-    <div class="container">
+    <div class="body">
       <div class="row">
         <div *ngFor="let user of users$ | async ; let i = index" class="col-md-4">
           <div *ngIf="i % 3 <= 2" class="card mb-4 box-shadow">
@@ -10,41 +10,27 @@
               <p class="card-text">{{ user.username | uppercase }}</p>
               <hr>
               <p class="card-text">{{ user.email }}</p>
-              <small class="text-muted">{{ user.birthDate }}</small>
+              <small class="text-muted">{{ user.birthDate | date : short }}</small>
               <br>
-              <br>
-              <div class="d-flex justify-content-between align-items-center">
+
                 <div class="btn-group">
                   <button type="button" class="btn btn-sm btn-outline-secondary" routerLink="/admin/panel/user-detail/{{user.id}}">View</button>
                   <button type="button" class="btn btn-sm btn-outline-secondary" routerLink="/admin/panel/edit-user/{{user.id}}">Edit</button>
-                  <!-- <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" (click)="getModalUser(user.id)" data-target="#exampleModalLong">Delete</button> -->
+                  <button type="button" class="btn btn-sm btn-outline-secondary" (click)="getModalUser(user.id)">Delete</button>
                 </div>
-              </div>
+
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-<!--   
-  <div *ngIf="modalUser">
-    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Are you sure to want to delete this user?</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            {{modalUser.username | uppercase}}
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" (click)="deleteUser()" data-dismiss="modal" class="btn btn-delete">Delete</button>
-          </div>
-        </div>
+  <clr-modal *ngIf="modalUser" [(clrModalOpen)]="isModalVisible" [clrModalClosable]="false">
+      <h3 class="modal-title">Are you sure to want to delete this user?</h3>
+      <div class="modal-body">Username: {{modalUser.username | uppercase}}</div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-outline" (click)="isModalVisible = false">Cancel</button>
+          <button type="button" (click)="deleteUser()" (click)="isModalVisible = false" class="btn btn-delete">Delete</button>
       </div>
-    </div>
-  </div> -->
+  </clr-modal>
+

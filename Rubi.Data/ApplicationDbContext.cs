@@ -14,9 +14,31 @@ namespace Rubi.Data
         {
         }
 
+        public DbSet<Clinic> Clinics { get; set;  }
+
+        public DbSet<ClinicManager> ClinicManagers { get; set; }
+
+        public DbSet<Doctor> Doctors { get; set; }
+
+        public DbSet<Patient> Patients { get; set; }
+
+        public DbSet<Staff> StaffsList { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new ApplicationUserConfig());
+
+            modelBuilder.ApplyConfiguration(new ClinicConfig());
+
+            modelBuilder.ApplyConfiguration(new ClinicManagerConfig());
+
+            modelBuilder.ApplyConfiguration(new DoctorConfig());
+
+            modelBuilder.ApplyConfiguration(new PatientConfig());
+
+            modelBuilder.ApplyConfiguration(new StaffConfig());
 
             modelBuilder.Entity<ApplicationUser>().ToTable("Users");
 

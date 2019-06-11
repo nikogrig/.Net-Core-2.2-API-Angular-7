@@ -14,6 +14,8 @@ namespace Rubi.Data.Configurations
             entity.ToTable("Users")
                   .HasKey(c => c.Id)
                   .HasName("UserId");
+
+
         }
     }
 }

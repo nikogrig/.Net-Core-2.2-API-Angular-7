@@ -14,6 +14,7 @@ import { AdminState } from 'src/app/store/admin.state';
 })
 export class GetUserComponent implements OnInit {
 
+  isModalVisible: boolean = false;
   users$: Observable<UsersListModel[]>;
   id: string;
   modalUser: UsersListModel;
@@ -32,6 +33,7 @@ export class GetUserComponent implements OnInit {
   }
 
   getModalUser(userId){
+    this.isModalVisible = true;
     this.store.pipe(select(userSelectors.getItemById(userId)))
     .subscribe((item : UsersListModel) => {
       this.modalUser = item;

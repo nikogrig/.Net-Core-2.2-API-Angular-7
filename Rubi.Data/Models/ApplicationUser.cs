@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Rubi.Constants;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Rubi.Data.Models
 {
@@ -30,5 +31,11 @@ namespace Rubi.Data.Models
 
         [Required]
         public string Address { get; set; }
+
+        //[ForeignKey("Doctor")]
+        public Doctor Doctor { get; set; }
+
+        //[ForeignKey("Patient")]
+        public Patient Patient { get; set; }
     }
 }

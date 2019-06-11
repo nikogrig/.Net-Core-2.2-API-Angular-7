@@ -175,7 +175,8 @@ namespace Rubi.Data.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("UserId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -185,6 +186,115 @@ namespace Rubi.Data.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Rubi.Data.Models.Clinic", b =>
+                {
+                    b.Property<Guid>("ClinicId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ClinicName")
+                        .IsRequired();
+
+                    b.Property<string>("Description")
+                        .IsRequired();
+
+                    b.HasKey("ClinicId");
+
+                    b.ToTable("Clinics");
+                });
+
+            modelBuilder.Entity("Rubi.Data.Models.ClinicManager", b =>
+                {
+                    b.Property<Guid>("ClinicManagerId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("ClinicId");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired();
+
+                    b.Property<string>("LastName")
+                        .IsRequired();
+
+                    b.HasKey("ClinicManagerId");
+
+                    b.HasIndex("ClinicId")
+                        .IsUnique();
+
+                    b.ToTable("ClinicManagers");
+                });
+
+            modelBuilder.Entity("Rubi.Data.Models.Doctor", b =>
+                {
+                    b.Property<Guid>("DoctorId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("ClinicId");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired();
+
+                    b.Property<string>("LastName")
+                        .IsRequired();
+
+                    b.Property<string>("Profession")
+                        .IsRequired();
+
+                    b.Property<Guid?>("UserId");
+
+                    b.HasKey("DoctorId");
+
+                    b.HasIndex("ClinicId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Doctors");
+                });
+
+            modelBuilder.Entity("Rubi.Data.Models.Patient", b =>
+                {
+                    b.Property<Guid>("PatientId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("ClinicId");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired();
+
+                    b.Property<string>("Illness")
+                        .IsRequired();
+
+                    b.Property<string>("LastName")
+                        .IsRequired();
+
+                    b.Property<Guid?>("UserId");
+
+                    b.HasKey("PatientId");
+
+                    b.HasIndex("ClinicId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("Rubi.Data.Models.Staff", b =>
+                {
+                    b.Property<Guid>("StaffId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("ClinicId");
+
+                    b.Property<string>("Description");
+
+                    b.HasKey("StaffId");
+
+                    b.HasIndex("ClinicId");
+
+                    b.ToTable("StaffsList");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -229,6 +339,46 @@ namespace Rubi.Data.Migrations
                     b.HasOne("Rubi.Data.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Rubi.Data.Models.ClinicManager", b =>
+                {
+                    b.HasOne("Rubi.Data.Models.Clinic", "Clinic")
+                        .WithOne("Manager")
+                        .HasForeignKey("Rubi.Data.Models.ClinicManager", "ClinicId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Rubi.Data.Models.Doctor", b =>
+                {
+                    b.HasOne("Rubi.Data.Models.Clinic", "Clinic")
+                        .WithMany("Doctors")
+                        .HasForeignKey("ClinicId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Rubi.Data.Models.ApplicationUser", "AppClient")
+                        .WithOne("Doctor")
+                        .HasForeignKey("Rubi.Data.Models.Doctor", "UserId");
+                });
+
+            modelBuilder.Entity("Rubi.Data.Models.Patient", b =>
+                {
+                    b.HasOne("Rubi.Data.Models.Clinic", "Clinic")
+                        .WithMany("Patients")
+                        .HasForeignKey("ClinicId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Rubi.Data.Models.ApplicationUser", "AppClient")
+                        .WithOne("Patient")
+                        .HasForeignKey("Rubi.Data.Models.Patient", "UserId");
+                });
+
+            modelBuilder.Entity("Rubi.Data.Models.Staff", b =>
+                {
+                    b.HasOne("Rubi.Data.Models.Clinic", "Clinic")
+                        .WithMany("StaffList")
+                        .HasForeignKey("ClinicId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

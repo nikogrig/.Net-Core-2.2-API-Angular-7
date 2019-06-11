@@ -8,16 +8,8 @@
           <section class="sidenav-content">
               <a (click)="getAllUsers()" sidenavHightLight class="nav-link">All Users</a>
               <a (click)="createUser()" sidenavHightLight class="nav-link">Create User</a>
-              <a routerLink="/admin/panel/all-users" class="nav-link">Delete User</a>
+              <a routerLink="/admin/panel/all-users" class="nav-link">Delete User</a>  
               <section class="nav-group collapsible">
-                  <input id="tabexample1" type="checkbox">
-                  <label for="tabexample1">Collapsible Nav Element</label>
-                  <ul class="nav-list">
-                      <li><a sidenavHightLight class="nav-link">Link 1</a></li>
-                      <li><a sidenavHightLight class="nav-link">Link 2</a></li>
-                  </ul>
-              </section>
-              <section class="nav-group">
                   <input id="tabexample2" type="checkbox">
                   <label for="tabexample2">Users List</label>
                   <ul *ngIf="users$" class="nav-list">
